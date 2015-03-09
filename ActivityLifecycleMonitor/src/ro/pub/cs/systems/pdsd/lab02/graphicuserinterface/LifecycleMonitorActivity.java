@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.PopupWindow;
 
@@ -74,7 +75,11 @@ public class LifecycleMonitorActivity extends Activity {
         okButton.setOnClickListener(buttonClickListener);
         Button cancelButton = (Button)findViewById(R.id.cancel_button);
         cancelButton.setOnClickListener(buttonClickListener);
-        Log.d(Constants.TAG, "onCreate() method was invoked");
+        if (savedInstanceState == null)
+        	Log.d(Constants.TAG, "onCreate() method was invoked savedInstance is null");
+        else
+        	Log.d(Constants.TAG, "onCreate() method was invoked savedInstance exists");
+        
     }    
 
     @Override
@@ -94,5 +99,74 @@ public class LifecycleMonitorActivity extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+    
+    @Override
+    protected void onStart() {
+      super.onStart();
+      Log.d(Constants.TAG, "onStart() method was invoked");
+    }
+   
+    @Override
+    protected void onResume() {
+      super.onResume();
+      Log.d(Constants.TAG, "onResume() method was invoked");
+    }
+   
+    @Override
+    protected void onPause() {
+      super.onPause();
+      Log.d(Constants.TAG, "onPause() method was invoked");
+    }
+   
+    @Override
+    protected void onStop() {
+      super.onStop();
+      Log.d(Constants.TAG, "onStop() method was invoked");
+    }
+   
+    @Override
+    protected void onDestroy() {
+      super.onDestroy();
+      Log.d(Constants.TAG, "onDestroy() method was invoked");
+    }
+   
+    @Override
+    protected void onRestart() {
+      super.onRestart();
+      Log.d(Constants.TAG, "onRestart() method was invoked");
+    }
+    
+    @Override
+    protected void onSaveInstanceState(Bundle savedInstanceState) {
+      super.onSaveInstanceState(savedInstanceState);
+      CheckBox checkButton = (CheckBox)findViewById(R.id.remember_me_checkbox);
+      if (checkButton.isChecked()) {
+    	  EditText usernameEditText = (EditText)findViewById(R.id.username_edit_text);
+    	  savedInstanceState.putString(Constants.USERNAME_EDIT_TEXT, usernameEditText.getText().toString());
+    	  EditText passEditText = (EditText)findViewById(R.id.password_edit_text);
+    	  savedInstanceState.putString(Constants.PASSWORD_EDIT_TEXT, passEditText.getText().toString());
+    	  savedInstanceState.putBoolean(Constants.REMEMBER_ME_CHECKBOX, checkButton.isChecked());
+      }
+    }
+    
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+      super.onRestoreInstanceState(savedInstanceState);
+      EditText usernameEditText= (EditText)findViewById(R.id.username_edit_text);
+      EditText passEditText= (EditText)findViewById(R.id.password_edit_text);
+      CheckBox checkButton = (CheckBox)findViewById(R.id.remember_me_checkbox);
+      
+      if (savedInstanceState.getString(Constants.USERNAME_EDIT_TEXT) != null) {
+          usernameEditText.setText(savedInstanceState.getString(Constants.USERNAME_EDIT_TEXT));
+      }
+      
+      if (savedInstanceState.getString(Constants.PASSWORD_EDIT_TEXT) != null) {
+          passEditText.setText(savedInstanceState.getString(Constants.PASSWORD_EDIT_TEXT));
+      }
+
+      if (savedInstanceState.getBoolean(Constants.REMEMBER_ME_CHECKBOX) == true) {
+    	  checkButton.setChecked(savedInstanceState.getBoolean(Constants.REMEMBER_ME_CHECKBOX));
+      }
     }
 }
